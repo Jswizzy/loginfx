@@ -36,6 +36,7 @@
     <orderEntry type="module" module-name="loginfx_main" />
     <orderEntry type="library" name="Gradle: no.tornado:tornadofx:1.7.14" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.10" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.simbiose:Encryption:2.0.1" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Gradle: org.glassfish:javax.json:1.0.4" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.10" level="project" />

@@ -2,9 +2,14 @@ package com.example.loginFx.view
 
 import com.example.loginFx.app.Styles
 import com.example.loginFx.controller.LoginController
+import com.example.loginFx.service.decrypt
+import com.example.loginFx.service.encrypt
+import com.example.loginFx.service.encryption
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation
+import se.simbio.encryption.Encryption
 import tornadofx.*
+import java.security.SecureRandom
 
 
 class LoginScreen : View("LoginFX") {
@@ -14,6 +19,11 @@ class LoginScreen : View("LoginFX") {
     val model = ViewModel()
     val username = model.bind { SimpleStringProperty() }
     val password = model.bind { SimpleStringProperty() }
+
+    private val encryption: Encryption by lazy {
+        val e = encryption(config.string("key"), config.string("salt"))
+        e
+    }
 
     override val root = form {
 
@@ -43,9 +53,10 @@ class LoginScreen : View("LoginFX") {
                         loginController.login(username.value, password.value)
                     } ui { success ->
                         if (success) {
+                            val e = encryption
                             with(config) {
-                                set("username" to username.value)
-                                set("password" to password.value)
+                                set("username" to (username.value).encrypt(e))
+                                set("password" to (password.value).encrypt(e))
                                 save()
                             }
                         }
@@ -60,9 +71,19 @@ class LoginScreen : View("LoginFX") {
     }
 
     override fun onDock() {
-        username.value = config.string("username", "")
-        password.value = config.string("password", "")
+        val e = encryption
+        username.value = config.string("username", "").decrypt(e)
+        password.value = config.string("password", "").decrypt(e)
         model.clearDecorators() // clears validation messages
+    }
+
+    init {
+        // use a token instead but this was for learning
+        with(config) {
+            computeIfAbsent("key", { SecureRandom.getInstance("SHA1PRNG").nextInt().toString() })
+            computeIfAbsent("salt", { SecureRandom.getInstance("SHA1PRNG").nextInt().toString() })
+            save()
+        }
     }
 }
 
