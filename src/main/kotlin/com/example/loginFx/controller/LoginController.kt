@@ -17,7 +17,7 @@ class LoginController: Controller() {
         api.baseURI = "https://api.github.com/"
     }
 
-    fun login(username: String, password: String) {
+    fun login(username: String, password: String): Boolean {
         runLater { status = "" }
         api.setBasicAuth(username, password)
         val response = api.get("user")
@@ -30,8 +30,7 @@ class LoginController: Controller() {
                 status = json.string("message") ?: "Login Failed"
             }
         }
-
-        println("Log in as $username with password $password")
+        return response.ok()
     }
 
     fun logout() {

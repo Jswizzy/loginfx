@@ -41,6 +41,14 @@ class LoginScreen : View("LoginFX") {
                 action {
                     runAsyncWithProgress {
                         loginController.login(username.value, password.value)
+                    } ui { success ->
+                        if (success) {
+                            with(config) {
+                                set("username" to username.value)
+                                set("password" to password.value)
+                                save()
+                            }
+                        }
                     }
                 }
             }
@@ -52,8 +60,8 @@ class LoginScreen : View("LoginFX") {
     }
 
     override fun onDock() {
-        username.value = ""
-        password.value = ""
+        username.value = config.string("username", "")
+        password.value = config.string("password", "")
         model.clearDecorators() // clears validation messages
     }
 }
